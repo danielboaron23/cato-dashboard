@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Tunnel Policy Dashboard - Cato Networks</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f4f6f8;
+            color: rgba(39, 60, 92, 0.9);
+            line-height: 1.5;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            height: 56px;
+            background: white;
+            box-shadow: 0px 5px 6px 0px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            width: 224px;
+            height: 56px;
+            background: #158864;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+        }
+
+        .cato-logo {
+            position: relative;
+            width: 80px;
+            height: 40px;
+            top: 8px;
+        }
+
+        .logo-icon {
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .logo-vectors {
+            position: absolute;
+            bottom: 9.88%;
+            left: 0;
+            right: 0.59%;
+            top: 7.5%;
+        }
+
+        .logo-vectors > div {
+            position: absolute;
+        }
+
+        .logo-vectors img {
+            display: block;
+            max-width: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* CATO letters positioning */
+        .vector-c {
+            inset: 8.94% 48.99% 32.94% 27.09%;
+        }
+
+        .vector-a {
+            inset: 8.97% 30.68% 32.94% 48.8%;
+        }
+
+        .vector-t {
+            inset: 80.56% 89.39% 9.94% 6.79%;
+        }
+
+        .vector-o {
+            inset: 80.56% 78.33% 9.91% 18.33%;
+        }
+
+        /* NETWORKS letters positioning */
+        .vector-n {
+            inset: 80.56% 66.98% 9.91% 29.38%;
+        }
+
+        .vector-e {
+            inset: 80.56% 53.38% 9.91% 40.75%;
+        }
+
+        .vector-t2 {
+            inset: 80.44% 42.02% 9.88% 54.33%;
+        }
+
+        .vector-w {
+            inset: 80.56% 30.55% 9.91% 65.69%;
+        }
+
+        .vector-o2 {
+            inset: 80.56% 18.88% 9.91% 77.18%;
+        }
+
+        .vector-r {
+            inset: 80.44% 7.42% 9.88% 88.78%;
+        }
+
+        .vector-k {
+            inset: 7.5% 0.59% 32.94% 69.81%;
+        }
+
+        .vector-s {
+            bottom: 32.94%;
+            left: 0;
+            right: 74.59%;
+            top: 7.5%;
+        }
+
+        .nav-tabs {
+            display: flex;
+            margin-left: 12px;
+        }
+
+        .nav-tab {
+            padding: 20px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(39, 60, 92, 0.9);
+            text-decoration: none;
+            border-bottom: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-tab.active {
+            color: #158864;
+            border-bottom-color: #158864;
+        }
+
+        .nav-tab:hover {
+            color: #158864;
+        }
+
+        .user-menu {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-right: 20px;
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #158864;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Left Sidebar - Pixel Perfect Match to Figma */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 56px;
+            width: 224px;
+            height: calc(100vh - 56px);
+            background: #ffffff;
+            border-right: 1px solid #d2d9e4;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Left Nav - 48px height */
+        .top-left-nav {
+            width: 224px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 8px 0 0;
+        }
+
+        .top-nav-left {
+            display: flex;
+            flex: 1;
+            gap: 8px;
+            padding: 8px 4px;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 42px;
+        }
+
+        .icon-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            background: none;
+            border: none;
+        }
+
+        .icon-btn:hover {
+            background: #f5f5f5;
+        }
+
+        /* Access Section */
+        .access-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Main Title - 42px height */
+        .main-title {
+            width: 224px;
+            height: 42px;
+            background: #ffffff;
+            box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        .main-title p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #158864;
+            letter-spacing: 0.15px;
+            margin: 0;
+        }
+
+        /* Category Component */
+        .category-component {
+            width: 224px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Category Header */
+        .category-header {
+            width: 224px;
+            background: #e2e7ee;
+            border-top: 1px solid #dce1ea;
+            border-bottom: 1px solid #dce1ea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+        }
+
+        .category-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-left p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(39, 60, 92, 0.9);
+            margin: 0;
+        }
+
+        .category-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 8px 0 0;
+        }
+
+        /* Category Content */
+        .category-content {
+            background: #ffffff;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            width: 224px;
+            height: 42px;
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .section-divider p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.4);
+            margin: 0;
+        }
+
+        .section-divider.expandable p {
+            font-weight: 500;
+            color: rgba(39, 60, 92, 0.42);
+        }
+
+        /* Sub Category Content */
+        .sub-category-content {
+            background: #ffffff;
+        }
+
+        /* Nav Menu Item */
+        .nav-menu-item {
+            width: 224px;
+            background: #ffffff;
+            position: relative;
+        }
+
+        .nav-menu-item.active {
+            background: #f0f9f6;
+        }
+
+        .nav-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 40px;
+            background: #158864;
+        }
+
+        .nav-item-content {
+            width: 224px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            cursor: pointer;
+        }
+
+        .nav-item-content p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.7);
+            margin: 0;
+        }
+
+        .nav-menu-item.active .nav-item-content p {
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        .nav-item-content i {
+            width: 14px;
+            height: 14px;
+            color: #616161;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 224px;
+            margin-top: 56px;
+            padding: 24px;
+            min-height: calc(100vh - 56px);
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.42);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: rgba(39, 60, 92, 0.42);
+            text-decoration: none;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 17px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 58px;
+            height: 14px;
+            background: rgba(21, 136, 100, 0.5);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .toggle-switch.enabled {
+            background: #158864;
+        }
+
+        .toggle-knob {
+            position: absolute;
+            top: -7px;
+            right: 26px;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        .toggle-switch.enabled .toggle-knob {
+            right: 4px;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        .help-icon {
+            width: 16px;
+            height: 16px;
+            background: #666;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background: rgba(39, 60, 92, 0.08);
+            border: none;
+            padding: 6px 28px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(39, 60, 92, 0.26);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-button:hover {
+            background: rgba(39, 60, 92, 0.12);
+            color: rgba(39, 60, 92, 0.4);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #d2d9e4;
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            background: #f2f4f7;
+            border-bottom: 1px solid #dce1ea;
+            padding: 11px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-container {
+            position: relative;
+            width: 278px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 30px;
+            border: 1px solid rgba(39, 60, 92, 0.23);
+            border-radius: 4px;
+            padding: 0 34px 0 34px;
+            font-size: 13px;
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: #666;
+        }
+
+        .search-placeholder {
+            position: absolute;
+            left: 34px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.42);
+            pointer-events: none;
+        }
+
+        .new-button {
+            background: white;
+            border: 1px solid #158864;
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #158864;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .new-button:hover {
+            background: #158864;
+            color: white;
+        }
+
+        .new-button-icon {
+            width: 16px;
+            height: 16px;
+            background: #158864;
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            background: white;
+            border-bottom: 1px solid #d2d9e4;
+        }
+
+        .table-header th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(39, 60, 92, 0.9);
+            border-right: 1px solid #dce1ea;
+            border-bottom: 1px solid #d2d9e4;
+        }
+
+        .table-header th:last-child {
+            border-right: none;
+        }
+
+        .table-row {
+            background: white;
+            border-bottom: 1px solid #dce1ea;
+        }
+
+        .table-row:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .table-row:hover {
+            background: #f0f9f6;
+        }
+
+        .table-cell {
+            padding: 8px 16px;
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.9);
+            border-right: 1px solid #dce1ea;
+            vertical-align: top;
+        }
+
+        .table-cell:last-child {
+            border-right: none;
+        }
+
+        /* Chip Styles */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(37, 49, 67, 0.04);
+            border: 1px solid rgba(39, 60, 92, 0.12);
+            border-radius: 100px;
+            padding: 2px 8px;
+            font-size: 12px;
+            color: rgba(39, 60, 92, 0.9);
+            margin: 2px;
+        }
+
+        .chip-icon {
+            width: 16px;
+            height: 16px;
+            background: #666;
+            border-radius: 2px;
+        }
+
+        /* Criteria Column Styles */
+        .criteria-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .criteria-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .criteria-label {
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.6);
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .criteria-chips {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .criteria-value {
+            flex: 1;
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        /* Configuration Column Styles */
+        .config-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .config-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .config-label {
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.6);
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .config-value {
+            flex: 1;
+            font-size: 13px;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        /* Default Rules Section */
+        .default-rules-header {
+            background: white;
+            padding: 13px 16px;
+            border-bottom: 1px solid #dce1ea;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        /* Side Panel Styles */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 250ms ease-out;
+            z-index: 1000;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -604px;
+            width: 604px;
+            height: 100vh;
+            background: #ffffff;
+            box-shadow: -4px 0 16px rgba(0,0,0,0.15);
+            transition: right 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            padding: 20px 40px;
+            border-bottom: 1px solid #E0E0E0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #757575;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #F5F5F5;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212121;
+            margin: 0;
+            flex: 1;
+        }
+
+        .panel-enable-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        .panel-footer {
+            padding: 16px 40px;
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        /* Accordion Styles */
+        .accordion-section {
+            margin-bottom: 24px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            user-select: none;
+            background: #FAFAFA;
+            transition: background-color 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: #F5F5F5;
+        }
+
+        .accordion-header .chevron {
+            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            color: #00796B;
+            width: 20px;
+            height: 20px;
+        }
+
+        .accordion-section.open .chevron {
+            transform: rotate(90deg);
+        }
+
+        .accordion-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #212121;
+            margin: 0;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 300ms ease-out;
+            opacity: 0;
+        }
+
+        .accordion-section.open .accordion-content {
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        .accordion-body {
+            padding: 20px;
+            background: white;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #212121;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00796B;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #00796B;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Radio Button Styles */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-input {
+            width: 16px;
+            height: 16px;
+            accent-color: #00796B;
+        }
+
+        .radio-label {
+            font-size: 14px;
+            color: #212121;
+            cursor: pointer;
+        }
+
+        /* Table Styles */
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .form-table th,
+        .form-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .form-table th {
+            background: #F5F5F5;
+            font-weight: 500;
+            font-size: 14px;
+            color: #212121;
+        }
+
+        .form-table td {
+            font-size: 14px;
+            color: #212121;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #F44336;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #FFEBEE;
+        }
+
+        .add-row-btn {
+            background: #00796B;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .add-row-btn:hover {
+            background: #005a4a;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: #00796B;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #005a4a;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #757575;
+            border: 1px solid #E0E0E0;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #F5F5F5;
+            color: #212121;
+        }
+
+        /* Stepper Styles */
+        .stepper {
+            margin-top: 20px;
+        }
+
+        .stepper-step {
+            margin-bottom: 24px;
+            padding: 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FAFAFA;
+        }
+
+        .stepper-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #212121;
+            margin-bottom: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .side-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .data-table {
+                min-width: 800px;
+            }
+
+            .panel-content {
+                padding: 20px;
+            }
+
+            .panel-header {
+                padding: 16px 20px;
+            }
+
+            .panel-footer {
+                padding: 16px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="logo-container">
+            <div class="cato-logo">
+                <div class="logo-icon">
+                    <div class="logo-vectors">
+                        <!-- C -->
+                        <div class="vector-c">
+                            <img src="https://www.figma.com/api/mcp/asset/d370596f-3a59-4537-a43b-9df55bdf86cd" alt="C" />
+                        </div>
+                        <!-- A -->
+                        <div class="vector-a">
+                            <img src="https://www.figma.com/api/mcp/asset/966b82c3-af7d-4fdb-ab1c-f8c0c0dd50eb" alt="A" />
+                        </div>
+                        <!-- T -->
+                        <div class="vector-t">
+                            <img src="https://www.figma.com/api/mcp/asset/37aa6f3d-07d7-4fd4-b514-8514c03fe305" alt="T" />
+                        </div>
+                        <!-- O -->
+                        <div class="vector-o">
+                            <img src="https://www.figma.com/api/mcp/asset/dc026eb0-a5f8-4e4b-ba36-0654caa7471e" alt="O" />
+                        </div>
+                        <!-- N -->
+                        <div class="vector-n">
+                            <img src="https://www.figma.com/api/mcp/asset/6d68344d-71de-48a5-9908-81be5f738b01" alt="N" />
+                        </div>
+                        <!-- E -->
+                        <div class="vector-e">
+                            <img src="https://www.figma.com/api/mcp/asset/5521fa33-7d93-49df-99d5-f244c516110e" alt="E" />
+                        </div>
+                        <!-- T -->
+                        <div class="vector-t2">
+                            <img src="https://www.figma.com/api/mcp/asset/584ef86e-aef1-4430-afcd-eec4d4021798" alt="T" />
+                        </div>
+                        <!-- W -->
+                        <div class="vector-w">
+                            <img src="https://www.figma.com/api/mcp/asset/78a3d9ee-ef42-4bd9-9c47-6da38c787a39" alt="W" />
+                        </div>
+                        <!-- O -->
+                        <div class="vector-o2">
+                            <img src="https://www.figma.com/api/mcp/asset/960f6cc9-e426-432f-b0d5-97cca3c69324" alt="O" />
+                        </div>
+                        <!-- R -->
+                        <div class="vector-r">
+                            <img src="https://www.figma.com/api/mcp/asset/59427c04-9b42-4545-8ef6-c4a6bfbb6f4a" alt="R" />
+                        </div>
+                        <!-- K -->
+                        <div class="vector-k">
+                            <img src="https://www.figma.com/api/mcp/asset/05d49c42-a873-45f2-bdea-4a135a4d783c" alt="K" />
+                        </div>
+                        <!-- S -->
+                        <div class="vector-s">
+                            <img src="https://www.figma.com/api/mcp/asset/dd14f716-f9b4-4222-b796-9fa8bdc62c21" alt="S" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <a href="#" class="nav-tab">Home</a>
+            <a href="#" class="nav-tab">Network</a>
+            <a href="#" class="nav-tab active">Access</a>
+            <a href="#" class="nav-tab">Security</a>
+            <a href="#" class="nav-tab">Resources</a>
+            <a href="#" class="nav-tab">Account</a>
+        </div>
+        
+        <div class="user-menu">
+            <div class="notification-icon">
+                <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                <div class="notification-badge">4</div>
+            </div>
+            <div class="notification-icon">
+                <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
+                <div class="notification-badge">4</div>
+            </div>
+            <div class="notification-icon">
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                <div class="notification-badge">4</div>
+            </div>
+            <div class="user-avatar">
+                <i data-lucide="user" style="width: 24px; height: 24px;"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Left Sidebar - Pixel Perfect Match to Figma -->
+    <aside class="sidebar">
+        <!-- Top Left Nav - 48px height -->
+        <div class="top-left-nav">
+            <div class="top-nav-left">
+                <div class="icon-btn">
+                    <i data-lucide="star" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div class="icon-btn">
+                    <i data-lucide="clock" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div class="icon-btn">
+                    <i data-lucide="help-circle" style="width: 20px; height: 20px;"></i>
+                </div>
+            </div>
+            <div class="top-nav-right">
+                <div class="icon-btn">
+                    <i data-lucide="more-horizontal" style="width: 18px; height: 18px;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Access Section -->
+        <div class="access-section">
+            <!-- Main Title - 42px height -->
+            <div class="main-title">
+                <p>Access</p>
+            </div>
+
+            <!-- Access Monitoring Component -->
+            <button class="category-component" onclick="toggleCategory(this)">
+                <div class="category-header">
+                    <div class="category-left">
+                        <i data-lucide="activity" style="width: 14px; height: 14px;"></i>
+                        <p>Access Monitoring</p>
+                    </div>
+                    <div class="category-right">
+                        <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                    </div>
+                </div>
+                <div class="category-content">
+                    <div class="section-divider">
+                        <p>GENERAL</p>
+                        <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+                    </div>
+                </div>
+            </button>
+
+            <!-- Access Configuration Component -->
+            <button class="category-component" onclick="toggleCategory(this)">
+                <div class="category-header">
+                    <div class="category-left">
+                        <i data-lucide="settings" style="width: 14px; height: 14px;"></i>
+                        <p>Access Configuration</p>
+                    </div>
+                    <div class="category-right">
+                        <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                    </div>
+                </div>
+                <div class="category-content">
+                    <div class="section-divider">
+                        <p>IDENTITY</p>
+                        <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+                    </div>
+                    <div class="section-divider">
+                        <p>AUTHENTICATION</p>
+                        <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+                    </div>
+                    <div class="section-divider expandable" onclick="toggleSubCategory(this)">
+                        <p>CLIENT ACCESS CONTROL</p>
+                        <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                    </div>
+                    <div class="sub-category-content">
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="link" style="width: 14px; height: 14px;"></i>
+                                <p>Client connectivity policy</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <p>Client Access</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                                <p>Client Rollout</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="server" style="width: 14px; height: 14px;"></i>
+                                <p>Always-On Policy</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item active">
+                            <div class="nav-item-content">
+                                <i data-lucide="git-branch" style="width: 14px; height: 14px;"></i>
+                                <p>Split Tunnel Policy</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                <p>IP Allocation Policy</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="settings" style="width: 14px; height: 14px;"></i>
+                                <p>Proxy Configuration Policy</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                <p>DNS Settings Policy</p>
+                            </div>
+                        </div>
+                        <div class="nav-menu-item">
+                            <div class="nav-item-content">
+                                <i data-lucide="shield" style="width: 14px; height: 14px;"></i>
+                                <p>Trusted Networks</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-divider">
+                        <p>BROWSER ACCESS</p>
+                        <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+                    </div>
+                </div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="#">Access</a> / Split Tunnel Policy
+        </nav>
+
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Split Tunnel Policy</h1>
+            <div class="header-controls">
+                <div class="toggle-container">
+                    <div class="toggle-switch enabled" onclick="toggleSwitch(this)">
+                        <div class="toggle-knob"></div>
+                    </div>
+                    <span class="toggle-label">Enabled</span>
+                    <i data-lucide="help-circle" style="width: 16px; height: 16px;" title="Help"></i>
+                </div>
+                <button class="save-button">Save</button>
+            </div>
+        </header>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <!-- Table Toolbar -->
+            <div class="table-toolbar">
+                <div class="search-container">
+                    <i data-lucide="search" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 50%; transform: translateY(-50%);"></i>
+                    <input type="text" class="search-input" placeholder="Search">
+                    <div class="search-placeholder">Search</div>
+                </div>
+                <button class="new-button">
+                    <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                    New
+                </button>
+            </div>
+
+            <!-- Data Table -->
+            <table class="data-table">
+                <thead class="table-header">
+                    <tr>
+                        <th style="width: 56px;">#</th>
+                        <th style="width: 249px;">Name</th>
+                        <th style="width: 206px;">Description</th>
+                        <th style="width: 168px;">Users/Groups</th>
+                        <th style="width: 278px;">Criteria</th>
+                        <th style="width: 379px;">Configuration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Policy Rule 1 -->
+                    <tr class="table-row">
+                        <td class="table-cell">1</td>
+                        <td class="table-cell">Exclude Zoom</td>
+                        <td class="table-cell">All to Cato - Exclude Zoom</td>
+                        <td class="table-cell">
+                            <div class="chip">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <span>All users</span>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="criteria-container">
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Platform:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <i data-lucide="monitor" style="width: 14px; height: 14px;"></i>
+                                            <span>Windows</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Source Network:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <span>Any network</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="config-container">
+                                <div class="config-row">
+                                    <div class="config-label">Coverage:</div>
+                                    <div class="config-value">All Ports & Protocols</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Policy:</div>
+                                    <div class="config-value">Route to Cato</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Excluded Destinations:</div>
+                                    <div class="config-value">
+                                        <div class="chip">
+                                            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                            <span>Zoom</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">LAN Access:</div>
+                                    <div class="config-value">Allow</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Policy Rule 2 -->
+                    <tr class="table-row">
+                        <td class="table-cell">2</td>
+                        <td class="table-cell">Exclude private destinations for RnD</td>
+                        <td class="table-cell">Web-only - Private Access is delivered via 3rd party SD-WAN</td>
+                        <td class="table-cell">
+                            <div class="chip">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <span>RnD</span>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="criteria-container">
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Platform:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <i data-lucide="monitor" style="width: 14px; height: 14px;"></i>
+                                            <span>macOS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Source Network:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <span>All managed networks</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Country:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <span style="font-size: 12px;">🇮🇱</span>
+                                            <span>Israel</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="config-container">
+                                <div class="config-row">
+                                    <div class="config-label">Coverage:</div>
+                                    <div class="config-value">Web-only (PAC based)</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Policy:</div>
+                                    <div class="config-value">Route to Cato</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Excluded DNS:</div>
+                                    <div class="config-value">Defined</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Excluded Destinations:</div>
+                                    <div class="config-value">
+                                        <div class="chip">
+                                            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                            <span>RFC-1918</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">LAN Access:</div>
+                                    <div class="config-value">Allow</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Policy Rule 3 -->
+                    <tr class="table-row">
+                        <td class="table-cell">3</td>
+                        <td class="table-cell">Local apps for UK finance team</td>
+                        <td class="table-cell">Local Apps via 3rd Party SD-WAN</td>
+                        <td class="table-cell">
+                            <div class="chip">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <span>UK Finance Team</span>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="criteria-container">
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Platform:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <i data-lucide="monitor" style="width: 14px; height: 14px;"></i>
+                                            <span>Windows</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Source Network:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <span>All managed networks</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Country:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <span style="font-size: 12px;">🇬🇧</span>
+                                            <span>UK</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="config-container">
+                                <div class="config-row">
+                                    <div class="config-label">Coverage:</div>
+                                    <div class="config-value">All Ports & Protocols</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Policy:</div>
+                                    <div class="config-value">Route to Cato</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Excluded DNS:</div>
+                                    <div class="config-value">Defined</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Excluded Destinations:</div>
+                                    <div class="config-value">
+                                        <div class="chip">
+                                            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                            <span>myapp.uk.local</span>
+                                        </div>
+                                        <div class="chip">
+                                            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                            <span>RFC-1918</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">LAN Access:</div>
+                                    <div class="config-value">Allow</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Policy Rule 4 -->
+                    <tr class="table-row">
+                        <td class="table-cell">4</td>
+                        <td class="table-cell">Global tech support team</td>
+                        <td class="table-cell">Web-only - Co-exist with 3rd Party VPN</td>
+                        <td class="table-cell">
+                            <div class="chip">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <span>Technical Support</span>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="criteria-container">
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Platform:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <i data-lucide="monitor" style="width: 14px; height: 14px;"></i>
+                                            <span>Windows</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="config-container">
+                                <div class="config-row">
+                                    <div class="config-label">Coverage:</div>
+                                    <div class="config-value">Web-only (PAC based)</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Policy:</div>
+                                    <div class="config-value">Route to Cato</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Excluded DNS:</div>
+                                    <div class="config-value">Defined</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Excluded Destinations:</div>
+                                    <div class="config-value">
+                                        <div class="chip">
+                                            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                            <span>RFC-1918</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">LAN Access:</div>
+                                    <div class="config-value">Allow</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Policy Rule 5 -->
+                    <tr class="table-row">
+                        <td class="table-cell">5</td>
+                        <td class="table-cell">Contractors</td>
+                        <td class="table-cell">All traffic to Acme destinations</td>
+                        <td class="table-cell">
+                            <div class="chip">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <span>Contractor group</span>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="criteria-container">
+                                <div class="criteria-row">
+                                    <div class="criteria-label">Platform:</div>
+                                    <div class="criteria-value">
+                                        <div class="chip">
+                                            <i data-lucide="monitor" style="width: 14px; height: 14px;"></i>
+                                            <span>Windows</span>
+                                        </div>
+                                        <div class="chip">
+                                            <i data-lucide="monitor" style="width: 14px; height: 14px;"></i>
+                                            <span>macOS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="config-container">
+                                <div class="config-row">
+                                    <div class="config-label">Coverage:</div>
+                                    <div class="config-value">All Ports & Protocols</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Policy:</div>
+                                    <div class="config-value">Route only selected to Cato</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Included Destinations:</div>
+                                    <div class="config-value">
+                                        <div class="chip">
+                                            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                            <span>mycustomerapp.acme.com</span>
+                                        </div>
+                                        <div class="chip">
+                                            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                            <span>RFC-1918</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">LAN Access:</div>
+                                    <div class="config-value">Allow</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Default Rules Section -->
+            <div class="default-rules-header">
+                Default Rules:
+            </div>
+            
+            <table class="data-table">
+                <tbody>
+                    <tr class="table-row">
+                        <td class="table-cell"></td>
+                        <td class="table-cell">Default Routing rule</td>
+                        <td class="table-cell"></td>
+                        <td class="table-cell">
+                            <div class="chip">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <span>Any</span>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="chip">
+                                <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                                <span>Any</span>
+                            </div>
+                        </td>
+                        <td class="table-cell">
+                            <div class="config-container">
+                                <div class="config-row">
+                                    <div class="config-label">Coverage:</div>
+                                    <div class="config-value">All Ports & Protocols</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">Policy:</div>
+                                    <div class="config-value">Route to Cato</div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-label">LAN Access:</div>
+                                    <div class="config-value">Allow</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Side Panel Overlay -->
+    <div id="side-panel-overlay" class="overlay"></div>
+
+    <!-- New Rule Side Panel -->
+    <div id="new-rule-panel" class="side-panel">
+        <div class="panel-header">
+            <button class="close-btn" onclick="closePanel()">×</button>
+            <h2 class="panel-title">Add LAN Firewall Rule</h2>
+            <div class="panel-enable-toggle">
+                <div class="toggle-switch enabled" onclick="togglePanelSwitch(this)">
+                    <div class="toggle-knob"></div>
+                </div>
+                <span class="toggle-label">Enabled</span>
+            </div>
+        </div>
+
+        <div class="panel-content">
+            <!-- 1. General Section (Open by default) -->
+            <div class="accordion-section open">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                    <h3 class="accordion-title">General</h3>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-input" placeholder="Enter rule name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea" placeholder="Enter rule description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rule Order</label>
+                            <input type="number" class="form-input" placeholder="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="enable-rule" name="rule-status" class="radio-input" checked>
+                                    <label for="enable-rule" class="radio-label">Enable this rule</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="disable-rule" name="rule-status" class="radio-input">
+                                    <label for="disable-rule" class="radio-label">Disable this rule</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Users/Groups Section -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                    <h3 class="accordion-title">Users/Groups</h3>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <table class="form-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <tr>
+                                    <td>All Users</td>
+                                    <td>Group</td>
+                                    <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="add-row-btn" onclick="addUserRow()">Add Row</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Platform Section -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                    <h3 class="accordion-title">Platform</h3>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label class="form-label">Select Platform</label>
+                            <select class="form-select">
+                                <option>Search or select</option>
+                                <option>Windows</option>
+                                <option>macOS</option>
+                                <option>iOS</option>
+                                <option>Android</option>
+                            </select>
+                        </div>
+                        <table class="form-table">
+                            <thead>
+                                <tr>
+                                    <th>Selected Platforms</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="platform-table-body">
+                                <tr>
+                                    <td>Windows</td>
+                                    <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Source Network Section -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                    <h3 class="accordion-title">Source Network</h3>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="any-network" name="source-network" class="radio-input" checked>
+                                <label for="any-network" class="radio-label">Any network</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="unmanaged-network" name="source-network" class="radio-input">
+                                <label for="unmanaged-network" class="radio-label">Any unmanaged network</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="managed-network" name="source-network" class="radio-input">
+                                <label for="managed-network" class="radio-label">All managed networks</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Country Section -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                    <h3 class="accordion-title">Country</h3>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label class="form-label">Select Country</label>
+                            <select class="form-select">
+                                <option>Search or select</option>
+                                <option>🇮🇱 Israel</option>
+                                <option>🇬🇧 United Kingdom</option>
+                                <option>🇺🇸 United States</option>
+                                <option>🇩🇪 Germany</option>
+                            </select>
+                        </div>
+                        <table class="form-table">
+                            <thead>
+                                <tr>
+                                    <th>Selected Countries</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="country-table-body">
+                                <tr>
+                                    <td>🇮🇱 Israel</td>
+                                    <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Configuration Section (Complex with stepper) -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                    <h3 class="accordion-title">Configuration</h3>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="stepper">
+                            <!-- Step 1: Select Connection Mode -->
+                            <div class="stepper-step">
+                                <h4 class="stepper-title">Step 1: Select Connection Mode</h4>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="route-specific" name="connection-mode" class="radio-input" checked>
+                                        <label for="route-specific" class="radio-label">Route traffic to a specific third party SD-WAN</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="web-only" name="connection-mode" class="radio-input">
+                                        <label for="web-only" class="radio-label">Web-only (PAC based)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Choose Routing Policy -->
+                            <div class="stepper-step">
+                                <h4 class="stepper-title">Step 2: Choose Routing Policy</h4>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="route-all" name="routing-policy" class="radio-input" checked>
+                                        <label for="route-all" class="radio-label">Route to all applications (Route web and non-web traffic via Cato)</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="route-web" name="routing-policy" class="radio-input">
+                                        <label for="route-web" class="radio-label">Route only web traffic (Route all web traffic via Cato)</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="route-selected" name="routing-policy" class="radio-input">
+                                        <label for="route-selected" class="radio-label">Route only selected to Cato (Only route traffic to selected destinations via Cato)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Define Routing Exceptions -->
+                            <div class="stepper-step">
+                                <h4 class="stepper-title">Step 3: Define Routing Exceptions (optional)</h4>
+                                
+                                <!-- DNS Exclusions -->
+                                <div class="form-group">
+                                    <h5 style="margin-bottom: 12px; color: #212121;">DNS Exclusions</h5>
+                                    <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                                        <select class="form-select" style="flex: 1;">
+                                            <option>Application</option>
+                                            <option>Chrome</option>
+                                            <option>Firefox</option>
+                                            <option>Edge</option>
+                                        </select>
+                                        <input type="text" class="form-input" placeholder="FQDN" style="flex: 2;">
+                                        <button class="btn-primary" style="padding: 8px 16px;">Add</button>
+                                    </div>
+                                    <table class="form-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>example.com</td>
+                                                <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Destination Exclusions -->
+                                <div class="form-group">
+                                    <h5 style="margin-bottom: 12px; color: #212121;">Destination Exclusions</h5>
+                                    <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                                        <select class="form-select" style="flex: 1;">
+                                            <option>Application</option>
+                                            <option>Chrome</option>
+                                            <option>Firefox</option>
+                                            <option>Edge</option>
+                                        </select>
+                                        <input type="text" class="form-input" placeholder="FQDN" style="flex: 2;">
+                                        <button class="btn-primary" style="padding: 8px 16px;">Add</button>
+                                    </div>
+                                    <table class="form-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>zoom.us</td>
+                                                <td>Domain</td>
+                                                <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. LAN Access Section -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                    <h3 class="accordion-title">LAN Access</h3>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label class="form-label">LAN Access Policy</label>
+                            <select class="form-select">
+                                <option>Allow</option>
+                                <option>Block</option>
+                                <option>Route via Cato</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <button class="btn-secondary" onclick="closePanel()">Cancel</button>
+            <button class="btn-primary" onclick="applyRule()">Apply</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Switch Functionality
+        function toggleSwitch(element) {
+            element.classList.toggle('enabled');
+            const label = element.nextElementSibling;
+            label.textContent = element.classList.contains('enabled') ? 'Enabled' : 'Disabled';
+        }
+
+        // Search Functionality
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.table-row');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Sidebar Toggle for Mobile
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('open');
+        }
+
+        // Category Toggle Functionality
+        function toggleCategory(button) {
+            const content = button.querySelector('.category-content');
+            const chevron = button.querySelector('.category-right i');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                content.style.display = 'none';
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Sub Category Toggle Functionality
+        function toggleSubCategory(divider) {
+            const subContent = divider.nextElementSibling;
+            const chevron = divider.querySelector('i');
+            
+            if (subContent.style.display === 'none') {
+                subContent.style.display = 'block';
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                subContent.style.display = 'none';
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Add mobile menu button if needed
+        if (window.innerWidth <= 1200) {
+            const topNav = document.querySelector('.top-nav');
+            const menuButton = document.createElement('button');
+            menuButton.innerHTML = '☰';
+            menuButton.style.cssText = 'background: none; border: none; font-size: 20px; cursor: pointer; margin-left: 16px;';
+            menuButton.onclick = toggleSidebar;
+            topNav.insertBefore(menuButton, topNav.children[1]);
+        }
+
+        // Side Panel Functionality
+        function openPanel() {
+            document.getElementById('side-panel-overlay').classList.add('active');
+            document.getElementById('new-rule-panel').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePanel() {
+            document.getElementById('side-panel-overlay').classList.remove('active');
+            document.getElementById('new-rule-panel').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Close panel on overlay click
+        document.getElementById('side-panel-overlay').addEventListener('click', closePanel);
+
+        // Close panel on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePanel();
+        });
+
+        // Toggle Panel Switch
+        function togglePanelSwitch(element) {
+            element.classList.toggle('enabled');
+            const label = element.nextElementSibling;
+            label.textContent = element.classList.contains('enabled') ? 'Enabled' : 'Disabled';
+        }
+
+        // Accordion Functionality
+        function toggleAccordion(header) {
+            const section = header.parentElement;
+            const isOpen = section.classList.contains('open');
+            
+            // Close all accordions
+            document.querySelectorAll('.accordion-section').forEach(acc => {
+                acc.classList.remove('open');
+            });
+            
+            // Open clicked accordion if it wasn't open
+            if (!isOpen) {
+                section.classList.add('open');
+            }
+        }
+
+        // Table Row Management
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+
+        function addUserRow() {
+            const tbody = document.getElementById('users-table-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" class="form-input" placeholder="Enter name" style="margin: 0; border: none; background: transparent;"></td>
+                <td>
+                    <select class="form-select" style="margin: 0; border: none; background: transparent;">
+                        <option>User</option>
+                        <option>Group</option>
+                    </select>
+                </td>
+                <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        // Apply Rule Function
+        function applyRule() {
+            // Collect form data
+            const formData = {
+                name: document.querySelector('.form-input[placeholder="Enter rule name"]').value,
+                description: document.querySelector('.form-textarea').value,
+                ruleOrder: document.querySelector('.form-input[placeholder="1"]').value,
+                enabled: document.getElementById('enable-rule').checked
+            };
+            
+            console.log('Applying rule:', formData);
+            
+            // Close panel
+            closePanel();
+            
+            // Show success message (you can customize this)
+            alert('Rule applied successfully!');
+        }
+
+        // Connect New button to open panel
+        document.addEventListener('DOMContentLoaded', function() {
+            const newButton = document.querySelector('.new-button');
+            if (newButton) {
+                newButton.addEventListener('click', openPanel);
+            }
+        });
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

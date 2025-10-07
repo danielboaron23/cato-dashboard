@@ -1,0 +1,196 @@
+/* Stories Overview Dashboard Styles */
+
+/* Map container styles */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* Custom marker styles */
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Dashboard grid layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+}
+
+/* Stats bar */
+.stats-bar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+/* Operational cards */
+.operational-cards {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+/* Metric widgets */
+.risk-score {
+  grid-column: 1 / 4;
+}
+
+.top-isp {
+  grid-column: 4 / 7;
+}
+
+.highest-criticality {
+  grid-column: 1 / -1;
+}
+
+.top-induction {
+  grid-column: 1 / 7;
+}
+
+.top-sites {
+  grid-column: 7 / -1;
+}
+
+.top-users {
+  grid-column: 1 / 7;
+}
+
+.top-hosts {
+  grid-column: 7 / -1;
+}
+
+/* MITRE techniques */
+.mitre-techniques {
+  grid-column: 1 / -1;
+}
+
+/* World map */
+.world-map {
+  grid-column: 1 / -1;
+}
+
+/* Country summary */
+.country-summary {
+  grid-column: 1 / -1;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .risk-score,
+  .top-isp,
+  .highest-criticality,
+  .top-induction,
+  .top-sites,
+  .top-users,
+  .top-hosts,
+  .mitre-techniques,
+  .world-map,
+  .country-summary {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .operational-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+/* Chart container styles */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
+/* Progress bar styles */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #E0E0E0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+/* Badge styles */
+.badge-critical {
+  background-color: #D32F2F;
+  color: white;
+}
+
+.badge-high {
+  background-color: #F57C00;
+  color: white;
+}
+
+.badge-medium {
+  background-color: #FBC02D;
+  color: black;
+}
+
+.badge-low {
+  background-color: #388E3C;
+  color: white;
+}
+
+/* Table styles */
+.data-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.data-table .MuiTableHead-root {
+  background-color: #F5F5F5;
+}
+
+.data-table .MuiTableRow-root:hover {
+  background-color: #F9F9F9;
+}
+
+/* Card hover effects */
+.metric-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

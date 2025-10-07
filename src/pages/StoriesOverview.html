@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stories Overview Dashboard - Cato Networks</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f4f6f8;
+            color: rgba(39, 60, 92, 0.9);
+            line-height: 1.5;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            height: 56px;
+            background: white;
+            box-shadow: 0px 5px 6px 0px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            width: 224px;
+            height: 56px;
+            background: #158864;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+        }
+
+        .cato-logo {
+            position: relative;
+            width: 80px;
+            height: 40px;
+            top: 8px;
+        }
+
+        .logo-icon {
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .logo-vectors {
+            position: absolute;
+            bottom: 9.88%;
+            left: 0;
+            right: 0.59%;
+            top: 7.5%;
+        }
+
+        .logo-vectors > div {
+            position: absolute;
+        }
+
+        .logo-vectors img {
+            display: block;
+            max-width: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* CATO letters positioning */
+        .vector-c {
+            inset: 8.94% 48.99% 32.94% 27.09%;
+        }
+
+        .vector-a {
+            inset: 8.97% 30.68% 32.94% 48.8%;
+        }
+
+        .vector-t {
+            inset: 80.56% 89.39% 9.94% 6.79%;
+        }
+
+        .vector-o {
+            inset: 80.56% 78.33% 9.91% 18.33%;
+        }
+
+        /* NETWORKS letters positioning */
+        .vector-n {
+            inset: 80.56% 66.98% 9.91% 29.38%;
+        }
+
+        .vector-e {
+            inset: 80.56% 55.63% 9.91% 40.73%;
+        }
+
+        .vector-t2 {
+            inset: 80.56% 44.28% 9.91% 52.08%;
+        }
+
+        .vector-w {
+            inset: 80.56% 32.93% 9.91% 63.43%;
+        }
+
+        .vector-o2 {
+            inset: 80.56% 21.58% 9.91% 74.78%;
+        }
+
+        .vector-r {
+            inset: 80.56% 10.23% 9.91% 86.13%;
+        }
+
+        .vector-k {
+            inset: 80.56% -1.12% 9.91% 97.48%;
+        }
+
+        .vector-s {
+            inset: 80.56% -12.47% 9.91% 108.83%;
+        }
+
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            margin-left: 40px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            margin: 0 4px;
+            background: none;
+            border: none;
+            color: rgba(39, 60, 92, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab:hover {
+            background: rgba(21, 136, 100, 0.1);
+            color: #158864;
+        }
+
+        .nav-tab.active {
+            background: #158864;
+            color: white;
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-right: 20px;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            color: rgba(39, 60, 92, 0.7);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .nav-icon:hover {
+            color: #158864;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(21, 136, 100, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .user-menu:hover {
+            background: rgba(21, 136, 100, 0.2);
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #158864;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 56px;
+            padding: 24px;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 8px;
+            color: rgba(39, 60, 92, 0.6);
+            font-size: 14px;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 8px;
+        }
+
+        .breadcrumb-current {
+            color: rgba(39, 60, 92, 0.9);
+            font-weight: 500;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: rgba(39, 60, 92, 0.9);
+            margin: 0;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(39, 60, 92, 0.2);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.7);
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(21, 136, 100, 0.1);
+            border-color: #158864;
+            color: #158864;
+        }
+
+        .filter-btn.active {
+            background: #158864;
+            color: white;
+            border-color: #158864;
+        }
+
+        .nav-btn {
+            padding: 8px;
+            border: 1px solid rgba(39, 60, 92, 0.2);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            color: rgba(39, 60, 92, 0.7);
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(21, 136, 100, 0.1);
+            border-color: #158864;
+            color: #158864;
+        }
+
+        .date-range {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .stats-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stats-number {
+            font-size: 24px;
+            font-weight: 600;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        .stats-label {
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.6);
+        }
+
+        .stats-breakdown {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.7);
+        }
+
+        .stat-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Operational Cards */
+        .operational-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .operational-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .operational-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            font-size: 32px;
+        }
+
+        .card-number {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.6);
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: rgba(39, 60, 92, 0.5);
+        }
+
+        /* Main Content Grid */
+        .main-content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .content-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .content-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Metric Widgets */
+        .metric-widget {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .metric-widget h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        /* Gauge Chart */
+        .gauge-container {
+            text-align: center;
+        }
+
+        .gauge {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #4CAF50 0deg, #FF9800 180deg, #F44336 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge::before {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .gauge-value {
+            font-size: 32px;
+            font-weight: 600;
+            z-index: 1;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        .gauge-message {
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.6);
+            margin: 0;
+        }
+
+        /* Donut Chart */
+        .chart-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .donut-chart {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #FF6B6B 0deg 43deg,
+                #4ECDC4 43deg 280deg,
+                #45B7D1 280deg 360deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .donut-chart::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .chart-center {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .chart-total {
+            display: block;
+            font-size: 20px;
+            font-weight: 600;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        .chart-label {
+            font-size: 12px;
+            color: rgba(39, 60, 92, 0.6);
+        }
+
+        .chart-legend {
+            flex: 1;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.7);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Tables */
+        .stories-table table,
+        .sites-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .stories-table th,
+        .stories-table td,
+        .sites-table th,
+        .sites-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(39, 60, 92, 0.1);
+        }
+
+        .stories-table th,
+        .sites-table th {
+            background: rgba(39, 60, 92, 0.05);
+            font-weight: 600;
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        .status-badge,
+        .criticality-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .site-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .site-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        .site-location {
+            font-size: 12px;
+            color: rgba(39, 60, 92, 0.6);
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-bar {
+            width: 60px;
+            height: 8px;
+            background: rgba(39, 60, 92, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-value {
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 20px;
+            color: rgba(39, 60, 92, 0.9);
+        }
+
+        /* MITRE Badges */
+        .mitre-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .mitre-badge {
+            padding: 6px 12px;
+            background: rgba(21, 136, 100, 0.1);
+            color: #158864;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(21, 136, 100, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .operational-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="logo-container">
+            <div class="cato-logo">
+                <div class="logo-icon">
+                    <div class="logo-vectors">
+                        <!-- C -->
+                        <div class="vector-c">
+                            <img src="https://www.figma.com/api/mcp/asset/d370596f-3a59-4537-a43b-9df55bdf86cd" alt="C" />
+                        </div>
+                        <!-- A -->
+                        <div class="vector-a">
+                            <img src="https://www.figma.com/api/mcp/asset/966b82c3-af7d-4fdb-ab1c-f8c0c0dd50eb" alt="A" />
+                        </div>
+                        <!-- T -->
+                        <div class="vector-t">
+                            <img src="https://www.figma.com/api/mcp/asset/37aa6f3d-07d7-4fd4-b514-8514c03fe305" alt="T" />
+                        </div>
+                        <!-- O -->
+                        <div class="vector-o">
+                            <img src="https://www.figma.com/api/mcp/asset/dc026eb0-a5f8-4e4b-ba36-0654caa7471e" alt="O" />
+                        </div>
+                        <!-- N -->
+                        <div class="vector-n">
+                            <img src="https://www.figma.com/api/mcp/asset/6d68344d-71de-48a5-9908-81be5f738b01" alt="N" />
+                        </div>
+                        <!-- E -->
+                        <div class="vector-e">
+                            <img src="https://www.figma.com/api/mcp/asset/5521fa33-7d93-49df-99d5-f244c516110e" alt="E" />
+                        </div>
+                        <!-- T -->
+                        <div class="vector-t2">
+                            <img src="https://www.figma.com/api/mcp/asset/584ef86e-aef1-4430-afcd-eec4d4021798" alt="T" />
+                        </div>
+                        <!-- W -->
+                        <div class="vector-w">
+                            
+                        </div>
+                        <!-- O -->
+                        <div class="vector-o2">
+                            <img src="https://www.figma.com/api/mcp/asset/960f6cc9-e426-432f-b0d5-97cca3c69324" alt="O" />
+                        </div>
+                        <!-- R -->
+                        <div class="vector-r">
+                            <img src="https://www.figma.com/api/mcp/asset/59427c04-9b42-4545-8ef6-c4a6bfbb6f4a" alt="R" />
+                        </div>
+                        <!-- K -->
+                        <div class="vector-k">
+                            <img src="https://www.figma.com/api/mcp/asset/05d49c42-a873-45f2-bdea-4a135a4d783c" alt="K" />
+                        </div>
+                        <!-- S -->
+                        <div class="vector-s">
+                            <img src="https://www.figma.com/api/mcp/asset/dd14f716-f9b4-4222-b796-9fa8bdc62c21" alt="S" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showDashboard('home')">Home</button>
+            <button class="nav-tab" onclick="showDashboard('access')">Access</button>
+            <button class="nav-tab" onclick="showDashboard('networks')">Networks</button>
+            <button class="nav-tab" onclick="showDashboard('users')">Users</button>
+            <button class="nav-tab" onclick="showDashboard('settings')">Settings</button>
+        </div>
+        
+        <div class="nav-right">
+            <i data-lucide="bell" class="nav-icon"></i>
+            <i data-lucide="help-circle" class="nav-icon"></i>
+            <div class="user-menu">
+                <div class="user-avatar">
+                    <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+                </div>
+                <span>Admin</span>
+                <i data-lucide="chevron-down" class="nav-icon"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="breadcrumb">
+                <span>Accounts</span>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">Stories</span>
+            </div>
+            
+            <div class="header-content">
+                <h1 class="dashboard-title">Stories Overview</h1>
+                
+                <div class="header-controls">
+                    <button class="filter-btn active">Merged</button>
+                    <button class="filter-btn">NSC</button>
+                    <button class="filter-btn">SOC</button>
+                    <button class="nav-btn">←</button>
+                    <span class="date-range">Last Day</span>
+                    <button class="nav-btn">→</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stats-item">
+                <span class="stats-number">197</span>
+                <span class="stats-label">Stories in Total</span>
+            </div>
+            
+            <div class="stats-breakdown">
+                <div class="stat-item">
+                    <div class="stat-indicator" style="background-color: #F44336;"></div>
+                    <span>60 Open</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-indicator" style="background-color: #FF9800;"></div>
+                    <span>40 In progress</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-indicator" style="background-color: #757575;"></div>
+                    <span>90 Closed</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-indicator" style="background-color: #4CAF50;"></div>
+                    <span>7 Resolved</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Operational Stories Cards -->
+        <div class="operational-cards">
+            <div class="operational-card">
+                <div class="card-icon">🏢</div>
+                <div class="card-content">
+                    <div class="card-number" style="color: #4CAF50;">42</div>
+                    <div class="card-title">All Sites</div>
+                    <div class="card-subtitle">Sites Up</div>
+                </div>
+            </div>
+            
+            <div class="operational-card">
+                <div class="card-icon">⚠️</div>
+                <div class="card-content">
+                    <div class="card-number" style="color: #F44336;">17</div>
+                    <div class="card-title">3 Sites with Critical Open Stories</div>
+                    <div class="card-subtitle">Critical</div>
+                </div>
+            </div>
+            
+            <div class="operational-card">
+                <div class="card-icon">🔄</div>
+                <div class="card-content">
+                    <div class="card-number" style="color: #FF9800;">5</div>
+                    <div class="card-title">5 Links with Recurring Stories</div>
+                    <div class="card-subtitle">Recurring</div>
+                </div>
+            </div>
+            
+            <div class="operational-card">
+                <div class="card-icon">🔗</div>
+                <div class="card-content">
+                    <div class="card-number" style="color: #2196F3;">1</div>
+                    <div class="card-title">with Recurring Shares</div>
+                    <div class="card-subtitle">Shares</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content-grid">
+            <div class="content-left">
+                <!-- Risk Score Gauge -->
+                <div class="metric-widget">
+                    <h3>Account Risk Score</h3>
+                    <div class="gauge-container">
+                        <div class="gauge">
+                            <div class="gauge-value">51</div>
+                        </div>
+                        <p class="gauge-message">
+                            You have 6 open stories in your account right now
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Top Stories by ISP -->
+                <div class="metric-widget">
+                    <h3>Top Stories by ISP</h3>
+                    <div class="chart-container">
+                        <div class="donut-chart">
+                            <div class="chart-center">
+                                <span class="chart-total">197</span>
+                                <span class="chart-label">Total</span>
+                            </div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                                <span>AT&T (12%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #4ECDC4;"></div>
+                                <span>Comcast (65%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #45B7D1;"></div>
+                                <span>Vodafone (25%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #96CEB4;"></div>
+                                <span>Verizon Fios (25%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #FFEAA7;"></div>
+                                <span>T-Mobile (25%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Highest Criticality Stories -->
+                <div class="metric-widget">
+                    <h3>Highest Criticality Stories</h3>
+                    <div class="stories-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Indication</th>
+                                    <th>Status</th>
+                                    <th>Criticality</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Site down</td>
+                                    <td>
+                                        <span class="status-badge" style="background-color: #F44336;">open</span>
+                                    </td>
+                                    <td>
+                                        <span class="criticality-badge" style="background-color: #D32F2F;">critical</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Multiple Entra Identity Alerts</td>
+                                    <td>
+                                        <span class="status-badge" style="background-color: #FF9800;">in-progress</span>
+                                    </td>
+                                    <td>
+                                        <span class="criticality-badge" style="background-color: #F57C00;">high</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>DNS Queries to Phishing-Rela</td>
+                                    <td>
+                                        <span class="status-badge" style="background-color: #F44336;">open</span>
+                                    </td>
+                                    <td>
+                                        <span class="criticality-badge" style="background-color: #F57C00;">high</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Suspicious PowerShell comm.</td>
+                                    <td>
+                                        <span class="status-badge" style="background-color: #757575;">closed</span>
+                                    </td>
+                                    <td>
+                                        <span class="criticality-badge" style="background-color: #FBC02D;">medium</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HTTP traffic to low popularity.</td>
+                                    <td>
+                                        <span class="status-badge" style="background-color: #4CAF50;">resolved</span>
+                                    </td>
+                                    <td>
+                                        <span class="criticality-badge" style="background-color: #388E3C;">low</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-right">
+                <!-- Top Sites -->
+                <div class="metric-widget">
+                    <h3>Top Sites</h3>
+                    <div class="sites-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Stories</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="site-info">
+                                            <span style="font-size: 16px;">📍</span>
+                                            <div>
+                                                <div class="site-name">TLV</div>
+                                                <div class="site-location">Tel Aviv</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="progress-container">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 100%; background-color: #F44336;"></div>
+                                            </div>
+                                            <span class="progress-value">10</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="site-info">
+                                            <span style="font-size: 16px;">📍</span>
+                                            <div>
+                                                <div class="site-name">NY</div>
+                                                <div class="site-location">New York</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="progress-container">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 80%; background-color: #F44336;"></div>
+                                            </div>
+                                            <span class="progress-value">8</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="site-info">
+                                            <span style="font-size: 16px;">📍</span>
+                                            <div>
+                                                <div class="site-name">Boston</div>
+                                                <div class="site-location">Boston</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="progress-container">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 60%; background-color: #F44336;"></div>
+                                            </div>
+                                            <span class="progress-value">6</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="site-info">
+                                            <span style="font-size: 16px;">📍</span>
+                                            <div>
+                                                <div class="site-name">Los Angeles</div>
+                                                <div class="site-location">Los Angeles</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="progress-container">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 50%; background-color: #F44336;"></div>
+                                            </div>
+                                            <span class="progress-value">5</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="site-info">
+                                            <span style="font-size: 16px;">📍</span>
+                                            <div>
+                                                <div class="site-name">Tokyo</div>
+                                                <div class="site-location">Tokyo</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="progress-container">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 40%; background-color: #F44336;"></div>
+                                            </div>
+                                            <span class="progress-value">4</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- MITRE Techniques -->
+                <div class="metric-widget">
+                    <h3>MITRE Techniques</h3>
+                    <div class="mitre-badges">
+                        <div class="mitre-badge">T1071 (45)</div>
+                        <div class="mitre-badge">T1078 (38)</div>
+                        <div class="mitre-badge">T1041 (32)</div>
+                        <div class="mitre-badge">T1059 (28)</div>
+                        <div class="mitre-badge">T1083 (24)</div>
+                        <div class="mitre-badge">T1055 (20)</div>
+                        <div class="mitre-badge">T1027 (16)</div>
+                        <div class="mitre-badge">T1033 (12)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Dashboard navigation
+        function showDashboard(dashboard) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Here you would typically load different dashboard content
+            console.log('Switching to:', dashboard);
+            
+            if (dashboard === 'access') {
+                // Redirect to the original SplitTunnelDashboard
+                window.location.href = 'SplitTunnelDashboard.html';
+            }
+        }
+
+        // Filter button functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Navigation buttons
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Add date navigation logic here
+                console.log('Date navigation clicked');
+            });
+        });
+    </script>
+</body>
+</html>
