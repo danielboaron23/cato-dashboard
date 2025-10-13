@@ -133,10 +133,48 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Uses modern React patterns and best practices
 - Responsive design for all device types
 
+## 👥 For Students & Contributors
+
+### 🎓 Student Resources
+
+- **[STUDENTS.md](./STUDENTS.md)** - Complete guide for students
+- **[TASKS.md](./TASKS.md)** - List of tasks and assignments
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - How to contribute to the project
+
+### 🤝 How to Join
+
+1. **Get Access**: Contact the project maintainer to be added as a collaborator
+2. **Clone the Project**: `git clone https://github.com/danielboaron23/cato-dashboard.git`
+3. **Read the Documentation**: Start with [STUDENTS.md](./STUDENTS.md)
+4. **Pick a Task**: Choose from [TASKS.md](./TASKS.md)
+5. **Start Contributing**: Follow the guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+### 📚 Learning Objectives
+
+This project is designed to help students learn:
+- Modern React development with TypeScript
+- Component-based architecture
+- Data visualization with charts and maps
+- Git collaboration and version control
+- Professional development practices
+
+### 🎯 Project Goals
+
+- **Educational**: Learn modern web development
+- **Collaborative**: Work together on a real project
+- **Practical**: Build a functional dashboard application
+- **Professional**: Follow industry best practices
+
 ## 📞 Support
 
+### For Students
+- **GitHub Issues**: Report bugs or ask questions
+- **Discussions**: General questions and ideas
+- **Email**: Contact the project maintainer
+
+### For General Support
 For issues or questions regarding the Cato Dashboard, please refer to the main project documentation or contact the development team.
 
 ---
 
-**Built with ❤️ for Cato Networks**
+**Built with ❤️ for Cato Networks and Students**
